@@ -60,10 +60,6 @@ public class Ragistration {
                 if (sports3.isSelected())
                     sports += "Hockey ";
 
-                // popup a message with the data on successful ragistration
-                JOptionPane.showMessageDialog(f,
-                        "Hello " + s + n + "\nYou have selected " + sports + " as your sports");
-
                 // warning message if any field is empty
                 if (n.equals("")) {
                     JOptionPane.showMessageDialog(f, "Please enter your name");
@@ -72,10 +68,16 @@ public class Ragistration {
                 } else if (!sports1.isSelected() && !sports2.isSelected() && !sports3.isSelected()) {
                 } else if (!sports1.isSelected() && !sports2.isSelected() && !sports3.isSelected()) {
                     JOptionPane.showMessageDialog(f, "Please select your sports");
+                } else {
+                    // popup a message with the data on successful ragistration
+                    JOptionPane.showMessageDialog(f,
+                            "Hello " + s + n + "\nYou have selected " + sports + " as your sports");
+
+                    // clear all the input fields
+                    name.setText("");
+
                 }
 
-                // clear all the input fields
-                name.setText("");
             }
         });
 
