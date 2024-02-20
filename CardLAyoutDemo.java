@@ -37,43 +37,27 @@ public class CardLAyoutDemo {
         // add buttons
         JPanel footer = new JPanel();
 
-        // JButton prev = new JButton("Previous");
-        // footer.add(prev);
+        JButton prev = new JButton("Previous");
+        footer.add(prev);
 
-        // JButton next = new JButton("Next");
-        // footer.add(next);
-        
-        // class Listener implements ActionListener {
-        //     public void actionPerformed(ActionEvent e) {
-        //         if (e.getSource() == next) {
-        //             cl.next(card_panel);
-        //         } else if (e.getSource() == prev) {
-        //             cl.previous(card_panel);
-        //         }
-        //     }
-        // }
-        // Listener listner = new Listener();
-        // next.addActionListener(listner);
-        // prev.addActionListener(listner);
+        JButton next = new JButton("Next");
+        footer.add(next);
 
-        JSlider slider = new JSlider();
-        footer.add(slider);
+        class Listener implements ActionListener {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == next) {
+                    cl.next(card_panel);
+                } else if (e.getSource() == prev) {
+                    cl.previous(card_panel);
+                }
+            }
+        }
+        Listener listner = new Listener();
+        next.addActionListener(listner);
+        prev.addActionListener(listner);
 
         f.add(footer, BorderLayout.SOUTH);
         f.setVisible(true);
-
-
-       
-
-
-        // change in delay
-        // while (true) {
-        // cl.next(card_panel);
-        // try {
-        // Thread.sleep(500);
-        // } catch (Exception ex) {
-        // }
-        // }
 
     }
 
