@@ -1,7 +1,4 @@
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.SliderUI;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
