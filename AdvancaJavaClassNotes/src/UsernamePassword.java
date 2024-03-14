@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class UsernamePassword {
     // Database connection details
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/users";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/students";
     public static final String DB_USER = "root";
     public static final String DB_PASS = "1234";
     public static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -16,7 +16,7 @@ public class UsernamePassword {
         try {
             // Connect with database
             con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-            ps = con.prepareStatement("select * from users where username = ?");
+            ps = con.prepareStatement("select * from creds where username = ?");
 
             // Create and set up the window
             JFrame frame = new JFrame("Change Password");
