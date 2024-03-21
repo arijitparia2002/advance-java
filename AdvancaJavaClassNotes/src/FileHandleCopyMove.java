@@ -5,7 +5,7 @@ import java.nio.file.*;
 public class FileHandleCopyMove {
     public static void main(String[] args) throws Exception {
         Path p1 = Paths.get("./dummy");
-        Path p2 = Paths.get("./dummy2");
+        Path p2 = Paths.get("./dummy2/dummykacopy");
 
         //create the directories and files
         
@@ -14,6 +14,6 @@ public class FileHandleCopyMove {
         // Files.createDirectories(p2);
         // Files.createFile(p2.resolve("dummy2.txt"));
 
-        Files.copy(p1.resolve("./dummy.txt"), p2.resolve("./dummykacopy.txt"));
+        Files.copy(p1, p2);
     }
 }

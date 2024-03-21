@@ -21,6 +21,9 @@ public class CardLayoutSlider {
         // add a card
 
         JPanel panel1 = new JPanel();
+        panel1.add(new JButton("A"));
+        panel1.add(new JButton("B"));
+        panel1.add(new JButton("C"));
         panel1.setBackground(Color.red);
         card_panel.add(panel1, "Red");
 

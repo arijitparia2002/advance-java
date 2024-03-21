@@ -32,7 +32,7 @@ public class MovingBallcanvas extends Canvas {
 
         // moving ball
         g.setColor(Color.RED);
-        g.fillOval(10 + h, 200 + v, 80, 80);
+        g.fillOval(10 - h, 200 + v, 80, 80);
        
         // moving ball
         g.setColor(Color.GREEN);
