@@ -3,5 +3,6 @@
         "lib/**/*.jar",
         "c:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-java-8.0.25.jar"
     ],
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.dependency.syncWithFolderExplorer": false
 }
