@@ -11,6 +11,7 @@ public class SnakeGame extends JFrame {
     private String currentUser;
     private Integer highScore;
     private Connection connection;
+    private JLabel welcomeLabel;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
     private JTextField usernameField;
@@ -73,6 +74,7 @@ public class SnakeGame extends JFrame {
                 String password = new String(passwordField.getPassword());
                 if (authenticate(username, password)) {
                     JOptionPane.showMessageDialog(SnakeGame.this, "Login successful!");
+                    welcomeLabel.setText("Welcome, " + currentUser + "!");
                     startButton.setEnabled(true);
                     loginButton.setEnabled(false);
                     signupButton.setEnabled(false);
@@ -107,10 +109,7 @@ public class SnakeGame extends JFrame {
                 signupButton.setEnabled(true);
                 logoutButton.setEnabled(false);
                 stopGame();
-                getContentPane().removeAll();
-                addLoginComponents();
-                revalidate();
-                repaint();
+                welcomeLabel.setText("Welcome, user!");
                 usernameField.setText("");
                 passwordField.setText("");
                 usernameField.setEnabled(true);
@@ -176,6 +175,12 @@ public class SnakeGame extends JFrame {
 
     private void addLoginComponents() {
         JPanel panel = new JPanel(null);
+
+        welcomeLabel = new JLabel("Welcome, user!");
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        welcomeLabel.setForeground(Color.BLACK);
+        welcomeLabel.setBounds(300, 50, 200, 30);
+        panel.add(welcomeLabel);
 
         // Positioning the Username Label and Field
         usernameLabel.setBounds(300, 100, 200, 30); // x, y, width, height
@@ -387,7 +392,7 @@ public class SnakeGame extends JFrame {
 
         // Draw score
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 20));
+        g.setFont(new Font("Arial", Font.BOLD, 16));
         g.drawString("Score: " + score, 10, 20);
 
         // Draw username and high score
