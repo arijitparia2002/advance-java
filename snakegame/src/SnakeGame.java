@@ -1,48 +1,15 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-class User {
-    private String username;
-    private String password;
-    private int score;
-    private int highScore;
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.score = 0;
-        this.highScore = 0;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-        if (score > highScore) {
-            highScore = score;
-        }
-    }
-
-    public int getHighScore() {
-        return highScore;
-    }
-}
-
-public class SnakeGame extends JFrame{
+public class SnakeGame extends JFrame {
+    private String currentUser;
+    private Integer highScore;
     private Connection connection;
     private JLabel usernameLabel;
     private JLabel passwordLabel;
@@ -62,8 +29,8 @@ public class SnakeGame extends JFrame{
     private int score;
     private int delay;
 
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 800;
     private static final int UNIT_SIZE = 20;
     private static final int INITIAL_DELAY = 100;
     private static final int SPEED_INCREASE = 10;
@@ -124,10 +91,12 @@ public class SnakeGame extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
-                addUser(username, password);
-                JOptionPane.showMessageDialog(SnakeGame.this, "Sign up successful!");
-                usernameField.setText("");
-                passwordField.setText("");
+                if (username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(SnakeGame.this, "Username and password cannot be empty.");
+                } else {
+                    addUser(username, password);
+                    JOptionPane.showMessageDialog(SnakeGame.this, "User created successfully!");
+                }
             }
         });
 
@@ -160,7 +129,6 @@ public class SnakeGame extends JFrame{
         addLoginComponents();
         setSize(WIDTH, HEIGHT); // Set login screen size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
     }
 
     private void connectToDatabase() {
@@ -180,7 +148,14 @@ public class SnakeGame extends JFrame{
             statement.setString(1, username);
             statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
-            return resultSet.next();
+            // user is authenticated so set the current user and high score
+
+            if (resultSet.next()) {
+                currentUser = username;
+                highScore = resultSet.getInt("score");
+                return true;
+            }
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -200,7 +175,23 @@ public class SnakeGame extends JFrame{
     }
 
     private void addLoginComponents() {
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        JPanel panel = new JPanel(null);
+
+        // Positioning the Username Label and Field
+        usernameLabel.setBounds(300, 100, 200, 30); // x, y, width, height
+        usernameField.setBounds(300, 130, 200, 30);
+
+        // Positioning the Password Label and Field
+        passwordLabel.setBounds(300, 170, 200, 30);
+        passwordField.setBounds(300, 200, 200, 30);
+
+        // Positioning the Buttons
+        loginButton.setBounds(220, 240, 100, 50);
+        signupButton.setBounds(330, 240, 100, 50);
+        logoutButton.setBounds(440, 240, 100, 50);
+        startButton.setBounds(300, 300, 200, 50);
+
+        // Adding components to the panel
         panel.add(usernameLabel);
         panel.add(usernameField);
         panel.add(passwordLabel);
@@ -209,7 +200,48 @@ public class SnakeGame extends JFrame{
         panel.add(signupButton);
         panel.add(logoutButton);
         panel.add(startButton);
+
+        // Add leaderboard panel below the start button
+        JPanel leaderboardPanel = new JPanel(new BorderLayout());
+        leaderboardPanel.setBounds(50, 360, 700, 400);
+        leaderboardPanel.setBorder(BorderFactory.createTitledBorder("Leaderboard"));
+
+        // Create the table model and table
+        String[] columnNames = { "Username", "Score" };
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable leaderboardTable = new JTable(tableModel);
+        leaderboardTable.setPreferredScrollableViewportSize(new Dimension(650, 350));
+        leaderboardTable.setFillsViewportHeight(true);
+
+        // Scrollable area for the leaderboard
+        JScrollPane scrollPane = new JScrollPane(leaderboardTable);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        leaderboardPanel.add(scrollPane);
+
+        panel.add(leaderboardPanel);
+
         getContentPane().add(panel);
+
+        // Update leaderboard data
+        updateLeaderboard(tableModel);
+    }
+
+    private void updateLeaderboard(DefaultTableModel tableModel) {
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT username, score FROM users ORDER BY score DESC");
+            ResultSet resultSet = statement.executeQuery();
+            tableModel.setRowCount(0); // Clear previous data
+
+            while (resultSet.next()) {
+                String username = resultSet.getString("username");
+                int score = resultSet.getInt("score");
+                Object[] row = { username, score };
+                tableModel.addRow(row); // Add a row with user data
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void startGame() {
@@ -321,10 +353,13 @@ public class SnakeGame extends JFrame{
         String username = usernameField.getText();
         // Update user score in the database
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE users SET score=? WHERE username=?");
-            statement.setInt(1, score);
-            statement.setString(2, username);
-            statement.executeUpdate();
+            if (score > highScore) {
+                highScore = score;
+                PreparedStatement statement = connection.prepareStatement("UPDATE users SET score=? WHERE username=?");
+                statement.setInt(1, score);
+                statement.setString(2, username);
+                statement.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -356,27 +391,12 @@ public class SnakeGame extends JFrame{
         g.drawString("Score: " + score, 10, 20);
 
         // Draw username and high score
-        String username = usernameField.getText();
-        try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE username=?");
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                int highScore = resultSet.getInt("high_score");
-                g.setFont(new Font("Arial", Font.PLAIN, 12));
-                g.drawString("User: " + username, 10, 40);
-                g.drawString("High Score: " + highScore, 10, 60);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        g.drawString("Username: " + currentUser, 10, 40);
+        g.drawString("Your High Score: " + (highScore > score ? highScore : score), 10, 60);
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new SnakeGame().setVisible(true);
-            }
-        });
+        SnakeGame game = new SnakeGame();
+        game.setVisible(true);
     }
 }
