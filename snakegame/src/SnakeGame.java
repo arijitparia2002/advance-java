@@ -34,7 +34,7 @@ public class SnakeGame extends JFrame {
     private static final int HEIGHT = 800;
     private static final int UNIT_SIZE = 20;
     private static final int INITIAL_DELAY = 100;
-    private static final int SPEED_INCREASE = 10;
+    private static final int SPEED_INCREASE = 2;
 
     public SnakeGame() {
         super("Snake Game");
@@ -176,7 +176,7 @@ public class SnakeGame extends JFrame {
     private void addLoginComponents() {
         JPanel panel = new JPanel(null);
 
-        welcomeLabel = new JLabel("Welcome, user!");
+        welcomeLabel = new JLabel("Welcome," + (currentUser != null ? currentUser : "User") + "!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 20));
         welcomeLabel.setForeground(Color.BLACK);
         welcomeLabel.setBounds(300, 50, 200, 30);
