@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
 
 public class DateTimeDemo {
     static public void main(String[] args) {
@@ -23,8 +24,10 @@ public class DateTimeDemo {
         LocalTime customTime = LocalTime.of(1, 9, 45);
         System.out.println("Custom time is: " + customTime);
 
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         // Methods of LocalDate
-        LocalDate parsedDate = LocalDate.parse("2024-11-30"); // ISO 8601 format should be there [YYYY-MM-DD]
+        LocalDate parsedDate = LocalDate.parse("2024-11-30", f); // ISO 8601 format should be there [YYYY-MM-DD]
         System.out.println(parsedDate);
         System.out.println();
 

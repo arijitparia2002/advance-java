@@ -20,7 +20,6 @@ public class SnakeGame extends JFrame {
     private JButton signupButton;
     private JButton logoutButton;
     private JButton startButton;
-
     private JPanel gamePanel;
     private Timer timer;
     private ArrayList<Point> snake;
@@ -216,7 +215,6 @@ public class SnakeGame extends JFrame {
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         JTable leaderboardTable = new JTable(tableModel);
         leaderboardTable.setPreferredScrollableViewportSize(new Dimension(650, 350));
-        leaderboardTable.setFillsViewportHeight(true);
 
         // Scrollable area for the leaderboard
         JScrollPane scrollPane = new JScrollPane(leaderboardTable);
